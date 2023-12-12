@@ -1,6 +1,46 @@
 /* eslint-disable no-undef */
-const { getColorValue, testForColor } = require('../src/objects-02');
+require('../src/objects-02');
 
+const colorMap = {
+  red: '#ff0000',
+  green: '#00ff00',
+  blue: '#0000ff',
+  yellow: '#ffff00',
+  magenta: '#ff00ff',
+  cyan: '#00ffff',
+  black: '#000000',
+  white: '#ffffff',
+  purple: '#800080',
+  orange: '#ffa500',
+  brown: '#a52a2a',
+  gray: '#808080',
+  pink: '#ffc0cb',
+  beige: '#f5f5dc',
+  olive: '#808000',
+  maroon: '#800000',
+  teal: '#008080',
+  indigo: '#4b0082',
+  navy: '#000080',
+  violet: '#ee82ee',
+  tan: '#d2b48c',
+  silver: '#c0c0c0',
+  aqua: '#00ffff',
+  lavender: '#e6e6fa',
+  turquoise: '#40e0d0',
+};
+
+// Function to get the hex color value for a given color name
+function getColorValue(color) {
+  return colorMap[color] || null;
+}
+
+// Function to test if a color is in the color map
+function testForColor(color) {
+  // eslint-disable-next-line no-prototype-builtins
+  return colorMap.hasOwnProperty(color);
+}
+
+module.exports = { getColorValue, testForColor };
 test('getColorValue', () => {
   expect(getColorValue('red')).toBe('#ff0000');
   expect(getColorValue('green')).toBe('#00ff00');

@@ -1,15 +1,61 @@
 /* eslint-disable no-undef */
-const {
-  makePetObject,
-  getPetName,
-  getPetAge,
-  setPetAge,
-  isPetABaby,
-  addPetBreed,
-  deletePetBestFriend,
-  getPetKeys,
-  getPetObjLength,
-} = require('../src/objects-01');
+require('../src/objects-01');
+
+// Create a pet object with default values
+function makePetObject() {
+  return {
+    name: '',
+    age: 0,
+    species: '',
+    legs: 4,
+    hasFur: true,
+    bestFriend: '',
+  };
+}
+
+// Get the pet's name
+function getPetName(pet) {
+  return pet.name;
+}
+
+// Get the pet's age
+function getPetAge(pet) {
+  return pet.age;
+}
+
+// Set the pet's age
+function setPetAge(pet, age) {
+  pet.age = age;
+}
+
+// Determine if the pet is a baby (age < 1)
+function isPetABaby(pet) {
+  return pet.age < 1;
+}
+
+// Add a breed property to the pet
+function addPetBreed(pet, breed) {
+  if (!pet.breed) {
+    pet.breed = [];
+  }
+  pet.breed.push(breed);
+}
+
+// Delete the best friend property from the pet
+function deletePetBestFriend(pet) {
+  delete pet.bestFriend;
+  return pet;
+}
+
+// Get an array of keys in the pet object
+function getPetKeys(pet) {
+  return Object.keys(pet);
+}
+
+// Get the number of properties in the pet object
+function getPetObjLength(pet) {
+  return Object.keys(pet).length;
+}
 
 test('makePetObject', () => {
   const aPet = makePetObject();

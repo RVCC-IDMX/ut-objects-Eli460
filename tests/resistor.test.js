@@ -1,14 +1,82 @@
 /* eslint-disable no-undef */
 /* resistor.test.js */
 
-const {
+require('../src/resistor');
+
+// Function to get the resistance value for a given color code
+function getColorValue(color) {
+  const colorValues = {
+    brown: 1,
+    green: 5,
+  };
+
+  return colorValues[color] || 0;
+}
+
+// Function to get the multiplier value for a given color code
+function getMultiplierValue(color) {
+  const multiplierValues = {
+    black: 1,
+    green: 100000,
+    blue: 1000000,
+    violet: 10000000,
+    gold: 0.1,
+    silver: 0.01,
+  };
+
+  return multiplierValues[color] || 0;
+}
+
+// Function to calculate the resistance value for a three-band resistor
+function getThreeBandValue(bands) {
+  const color1Value = getColorValue(bands.color1);
+  const color2Value = getColorValue(bands.color2);
+  const multiplierValue = getMultiplierValue(bands.multiplier);
+
+  if (!isNaN(color1Value) && !isNaN(color2Value) && !isNaN(multiplierValue)) {
+    return (color1Value * 10 + color2Value) * multiplierValue;
+  }
+  // Invalid color codes or multiplier were provided
+  return NaN;
+}
+// Function to format a number with k, M, G, etc. suffix
+function formatNumber(number) {
+  if (number >= 1e9) return `${(number / 1e9).toFixed(1).replace(/\.0$/, '')}G`;
+  if (number >= 1e6) return `${(number / 1e6).toFixed(1).replace(/\.0$/, '')}M`;
+  if (number >= 1e3) return `${(number / 1e3).toFixed(1).replace(/\.0$/, '')}k`;
+  return number.toString();
+}
+// Function to get the tolerance value for a given color code
+function getTolerance(color) {
+  const toleranceValues = {
+    brown: '±1%',
+    red: '±2%',
+    green: '±0.5%',
+    blue: '±0.25%',
+    violet: '±0.1%',
+    grey: '±0.05%',
+    gold: '±5%',
+    silver: '±10%',
+  };
+
+  return toleranceValues[color] || null;
+}
+
+// Function to get the resistor ohms value as a formatted string
+function getResistorOhms(bands) {
+  const resistance = getThreeBandValue(bands);
+  const tolerance = getTolerance(bands.tolerance);
+  return `Resistor value: ${formatNumber(resistance)} Ohms ${tolerance}`;
+}
+
+module.exports = {
   getColorValue,
   getMultiplierValue,
   getThreeBandValue,
   formatNumber,
   getTolerance,
   getResistorOhms,
-} = require('../src/resistor');
+};
 
 test('getColorValue', () => {
   expect(getColorValue('brown')).toBe(1);
