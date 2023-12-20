@@ -8,12 +8,11 @@ function getColorValue(color) {
   const colorValues = {
     brown: 1,
     green: 5,
+    // Add more colors as needed
   };
-
-  return colorValues[color] || 0;
+  return colorValues[color] || 0; // Default to 0 if color not found
 }
 
-// Function to get the multiplier value for a given color code
 function getMultiplierValue(color) {
   const multiplierValues = {
     black: 1,
@@ -22,31 +21,29 @@ function getMultiplierValue(color) {
     violet: 10000000,
     gold: 0.1,
     silver: 0.01,
+    // Add more colors as needed
   };
-
-  return multiplierValues[color] || 0;
+  return multiplierValues[color] || 0; // Default to 0 if color not found
 }
 
-// Function to calculate the resistance value for a three-band resistor
 function getThreeBandValue(bands) {
   const color1Value = getColorValue(bands.color1);
   const color2Value = getColorValue(bands.color2);
   const multiplierValue = getMultiplierValue(bands.multiplier);
+  const result = (color1Value * 10 + color2Value) * multiplierValue;
+  return Number(result.toFixed(2));
+}
 
-  if (!isNaN(color1Value) && !isNaN(color2Value) && !isNaN(multiplierValue)) {
-    return (color1Value * 10 + color2Value) * multiplierValue;
-  }
-  // Invalid color codes or multiplier were provided
-  return NaN;
-}
-// Function to format a number with k, M, G, etc. suffix
 function formatNumber(number) {
-  if (number >= 1e9) return `${(number / 1e9).toFixed(1).replace(/\.0$/, '')}G`;
-  if (number >= 1e6) return `${(number / 1e6).toFixed(1).replace(/\.0$/, '')}M`;
-  if (number >= 1e3) return `${(number / 1e3).toFixed(1).replace(/\.0$/, '')}k`;
-  return number.toString();
+  if (number < 1000) {
+    return number.toString();
+  } if (number < 1000000) {
+    return `${(number / 1000).toFixed(1).replace(/\.0$/, '')}k`;
+  } if (number < 1000000000) {
+    return `${(number / 1000000).toFixed(1).replace(/\.0$/, '')}M`;
+  }
+  return `${(number / 1000000000).toFixed(1).replace(/\.0$/, '')}G`;
 }
-// Function to get the tolerance value for a given color code
 function getTolerance(color) {
   const toleranceValues = {
     brown: '±1%',
@@ -57,18 +54,19 @@ function getTolerance(color) {
     grey: '±0.05%',
     gold: '±5%',
     silver: '±10%',
+    // Add more colors as needed
   };
-
-  return toleranceValues[color] || null;
+  return toleranceValues[color] || 'Unknown'; // Default to 'Unknown' if color not found
 }
 
-// Function to get the resistor ohms value as a formatted string
 function getResistorOhms(bands) {
-  const resistance = getThreeBandValue(bands);
+  const ohmsValue = getThreeBandValue(bands);
+  const formattedOhms = formatNumber(ohmsValue);
   const tolerance = getTolerance(bands.tolerance);
-  return `Resistor value: ${formatNumber(resistance)} Ohms ${tolerance}`;
+  return `Resistor value: ${formattedOhms} Ohms ${tolerance}`;
 }
 
+// Export the functions
 module.exports = {
   getColorValue,
   getMultiplierValue,
@@ -77,7 +75,6 @@ module.exports = {
   getTolerance,
   getResistorOhms,
 };
-
 test('getColorValue', () => {
   expect(getColorValue('brown')).toBe(1);
   expect(getColorValue('green')).toBe(5);
@@ -99,12 +96,12 @@ test('getThreeBandValue', () => {
     multiplier: 'gold',
     tolerance: 'silver',
   };
-  expect(getThreeBandValue(bands)).toBe(1);
+  expect(getThreeBandValue(bands)).toBe(1, 2);
   //
   bands.color1 = 'blue';
   bands.color2 = 'orange';
   bands.multiplier = 'silver';
-  expect(getThreeBandValue(bands)).toBe(0.63);
+  expect(getThreeBandValue(bands)).toBe(0.63, 2);
   //
   bands.color1 = 'red';
   bands.color2 = 'green';
